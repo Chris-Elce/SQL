@@ -1,6 +1,6 @@
--- A pokemon database of 800 Pokemon. Basically, a SQL version of a Pokedex. 
+--Let's get some stats about Legendary Pokemon. Then, we'll letter rank all Pokemon by their Attack power. 
 
-CREATE TABLE pokemon(
+CREATE TABLE pokemon (
   Number     INTEGER,
   Name       TEXT PRIMARY KEY,
   Type_1     TEXT,
@@ -842,14 +842,14 @@ WHERE Legendary='True';
 
 -- What Legendary Pokemon has the highest Attack power?
 
-SELECT (Name, MAX(Attack)) 
+SELECT Name, MAX(Attack)
 AS "Legendary with Highest Attack Power" 
 FROM pokemon 
 WHERE Legendary='True';
 
 -- What Legendary Pokemon as the lowest Attack power?
 
-SELECT (Name, MIN(Attack)) 
+SELECT Name, MIN(Attack) 
 AS "Legendary with Lowest Attack Power" 
 FROM pokemon 
 WHERE Legendary='True';
