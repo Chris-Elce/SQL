@@ -1,0 +1,58 @@
+#In this PostgreSQL code, we're querying a database of Nexflix data to answer questions about the data. 
+
+#0. How many TV Show titles are there in the database?
+SELECT count(*) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type='TV Show';
+
+#1. What are the number of Netflix titles per country and country sharing titles?
+SELECT country, COUNT(country)
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+GROUP BY country 
+HAVING COUNT(country) > 1
+
+#2. How many movie titles are there in the database? 
+SELECT count(*) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type='Movie';
+
+#3. When was the most recent batch of tv shows and/or movies added to the database? 
+SELECT max(date(date_added))
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
+
+#4. List all the movies and tv shows in alphabetical order. 
+SELECT title
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+ORDER BY title asc;
+
+#5. Who was the Director for the movie Bright Star? 
+SELECT director
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+LEFT JOIN  "CharlotteChaze/BreakIntoTech"."netflix_people" people
+ON titles.show_id=people.show_id
+WHERE titles.title='Bright Star'
+
+#6. What is the oldest movie in the database and what year was it made? 
+SELECT title, release_year
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type='Movie'
+ORDER BY release_year asc
+LIMIT 1;
+#NOTE: Just in case two or more movies were made in the same year, we want to see ALL the past movies with the below subquery.  
+SELECT title, release_year 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'
+AND release_year <= 
+(SELECT MIN(release_year) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'); 
+
+#7. What about all the "new" movie releases?
+#NOTE: Multiple movie releases per year are the norm these days. Let's run another subquery to see all "new" 2021 movie releases. 
+SELECT title, release_year 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'
+AND release_year >=
+(SELECT MAX(release_year) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type = 'Movie'); 
